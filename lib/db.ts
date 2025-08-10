@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react"
 import { SupabaseStorage, type StoredFile } from "./storage"
-import { useAuth } from "@/components/auth"
+import { useAuth } from "../components/auth"
 
 export { type StoredFile } from "./storage"
 

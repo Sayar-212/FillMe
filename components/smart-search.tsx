@@ -1,12 +1,12 @@
 "use client"
 
 import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
+import { Button } from "../components/ui/button"
+import { Input } from "../components/ui/input"
+import { Card, CardContent } from "../components/ui/card"
+import { Badge } from "../components/ui/badge"
 import { MessageCircle, Search, X } from "lucide-react"
-import type { StoredFile } from "@/lib/storage"
+import type { StoredFile } from "../lib/storage"
 
 interface SmartSearchProps {
   files: StoredFile[]
