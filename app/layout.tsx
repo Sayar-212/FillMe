@@ -6,9 +6,9 @@ import "./globals.css"
 import ClientLayout from "./layout.client.tsx"
 
 export const metadata: Metadata = {
-  title: "v0 App",
-  description: "Created with v0",
-  generator: "v0.dev",
+  title: "FillMe - Your all in 1 storage destination",
+  description: "Store Everything. Structured. Forever. Drop it. Tag it. Find it.",
+  generator: "FillMe",
 }
 
 export default function RootLayout({
