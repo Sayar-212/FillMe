@@ -2,7 +2,7 @@
 
 import type React from "react"
 import { createContext, useContext, useEffect, useMemo, useState } from "react"
-import { supabase } from "@/lib/supabase"
+import { supabase } from "../lib/supabase"
 import type { User as SupabaseUser } from "@supabase/supabase-js"
 
 type User = {

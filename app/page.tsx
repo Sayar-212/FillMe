@@ -2,10 +2,10 @@
 
 import { useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { Button } from "@/components/ui/button"
+import { Button } from "../components/ui/button"
 
-import GradientBG from "@/components/gradient-bg"
-import { useAuth } from "@/components/auth"
+import GradientBG from "../components/gradient-bg"
+import { useAuth } from "../components/auth"
 
 export default function Page() {
   const router = useRouter()
