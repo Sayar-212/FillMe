@@ -1,6 +1,6 @@
 "use client"
 
-import { ArrowLeft, Github, Linkedin, Mail } from "lucide-react"
+import { ArrowLeft, ExternalLink, Link, Mail } from "lucide-react"
 import { Button } from "../../components/ui/button"
 import GradientBG from "../../components/gradient-bg"
 
@@ -112,9 +112,15 @@ export default function AboutPage() {
                   </a>
                 </Button>
                 <Button variant="outline" size="sm" asChild>
-                  <a href="https://github.com/Sayar-212" target="_blank" rel="noopener noreferrer">
-                    <Github className="mr-2 h-4 w-4" />
-                    GitHub
+                  <a href="https://sayar-port.vercel.app" target="_blank" rel="noopener noreferrer">
+                    <ExternalLink className="mr-2 h-4 w-4" />
+                    Portfolio
+                  </a>
+                </Button>
+                <Button variant="outline" size="sm" asChild>
+                  <a href="https://linktr.ee/sayarbasu" target="_blank" rel="noopener noreferrer">
+                    <Link className="mr-2 h-4 w-4" />
+                    Linktree
                   </a>
                 </Button>
               </div>
