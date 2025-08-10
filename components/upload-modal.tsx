@@ -211,72 +211,105 @@ export default function UploadModal({ open = false, onOpenChange, currentStorage
           </div>
         </div>
 
-        <div className="mx-6 mt-4 mb-6 space-y-3 flex-1 overflow-hidden flex flex-col">
-          <div className="flex items-center justify-between">
-            <div className="text-sm font-medium">{"Upload Queue"}</div>
-            <div className="text-xs text-muted-foreground">
-              {doneCount}/{queue.length} {"ready"}
-            </div>
-          </div>
-          <div className="flex-1 min-h-0 overflow-y-auto rounded-md border">
-            {queue.length ? (
-              queue.map(({ file, path }, idx) => (
-                <div
-                  key={`${file.name}-${idx}`}
-                  className="flex items-center justify-between gap-3 border-b px-3 py-2 last:border-b-0"
-                >
-                  <div className="min-w-0">
-                    <div className="truncate text-sm">{file.name}</div>
-                    <div className="text-xs text-muted-foreground">
-                      {(path || "").split("/").slice(0, -1).join("/")}
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                    {saving && idx < doneCount ? (
-                      <CheckCircle2 className="h-4 w-4 text-green-600" />
-                    ) : saving && idx === doneCount ? (
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                    ) : (
-                      <span>{(file.size / 1024).toFixed(1)} KB</span>
-                    )}
-                  </div>
-                </div>
-              ))
-            ) : (
-              <div className="px-4 py-6 text-center text-sm text-muted-foreground">
-                {"No files yet. Add some above."}
-              </div>
-            )}
-          </div>
-
-          {/* Local Storage Bar */}
+        <div className="mx-6 mt-4 mb-6 space-y-4 flex-1 overflow-hidden flex flex-col">
+          {/* Storage Bar - Always visible when files in queue */}
           {queue.length > 0 && (
-            <div className="border-t pt-3 space-y-2">
-              <div className="flex items-center justify-between text-xs">
-                <span className="text-muted-foreground">
-                  Queue: {(queueSize / 1024 / 1024).toFixed(1)}MB
-                </span>
-                <span className={wouldExceedLimit ? "text-red-500 font-medium" : "text-muted-foreground"}>
-                  Total: {((currentStorage + queueSize) / 1024 / 1024).toFixed(1)}MB / 100MB
+            <div className="bg-muted/30 rounded-lg p-4 space-y-3">
+              <div className="flex items-center justify-between text-sm">
+                <span className="font-medium">Storage Preview</span>
+                <span className={wouldExceedLimit ? "text-red-600 font-medium" : "text-muted-foreground"}>
+                  {((currentStorage + queueSize) / 1024 / 1024).toFixed(1)}MB / 100MB
                 </span>
               </div>
-              <div className="h-2 bg-muted rounded-full overflow-hidden">
+              <div className="h-3 bg-background rounded-full overflow-hidden border">
                 <div 
-                  className={`h-full transition-all ${
+                  className={`h-full transition-all duration-300 ${
                     wouldExceedLimit ? 'bg-red-500' : 'bg-primary'
                   }`}
                   style={{ width: `${Math.min(((currentStorage + queueSize) / maxStorage) * 100, 100)}%` }}
                 />
               </div>
+              <div className="flex items-center justify-between text-xs text-muted-foreground">
+                <span>Current: {(currentStorage / 1024 / 1024).toFixed(1)}MB</span>
+                <span>Queue: {(queueSize / 1024 / 1024).toFixed(1)}MB</span>
+              </div>
               {wouldExceedLimit && (
-                <p className="text-xs text-red-500">
-                  ⚠️ This upload would exceed your 100MB limit!
-                </p>
+                <div className="bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800 rounded-md p-3">
+                  <p className="text-sm text-red-700 dark:text-red-300">
+                    ⚠️ This upload would exceed your 100MB limit! Remove some files below to continue.
+                  </p>
+                </div>
               )}
             </div>
           )}
 
-          <div className="flex items-center justify-between pt-1 flex-shrink-0">
+          <div className="flex items-center justify-between">
+            <div className="text-sm font-medium">
+              Upload Queue {queue.length > 0 && `(${queue.length} files)`}
+            </div>
+            {saving && (
+              <div className="text-xs text-muted-foreground">
+                {doneCount}/{queue.length} uploaded
+              </div>
+            )}
+          </div>
+          
+          <div className="flex-1 min-h-0 overflow-y-auto rounded-lg border bg-background">
+            {queue.length ? (
+              <div className="divide-y">
+                {queue.map(({ file, path }, idx) => (
+                  <div
+                    key={`${file.name}-${idx}`}
+                    className="flex items-center gap-3 p-3 hover:bg-muted/50 transition-colors"
+                  >
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <div className="truncate text-sm font-medium">{file.name}</div>
+                        <span className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded">
+                          {(file.size / 1024 / 1024).toFixed(1)}MB
+                        </span>
+                      </div>
+                      {path && path !== file.name && (
+                        <div className="text-xs text-muted-foreground mt-1">
+                          {(path || "").split("/").slice(0, -1).join("/")}
+                        </div>
+                      )}
+                    </div>
+                    
+                    <div className="flex items-center gap-2">
+                      {saving && idx < doneCount ? (
+                        <CheckCircle2 className="h-4 w-4 text-green-600" />
+                      ) : saving && idx === doneCount ? (
+                        <Loader2 className="h-4 w-4 animate-spin text-primary" />
+                      ) : (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 w-8 p-0 text-muted-foreground hover:text-red-500"
+                          onClick={() => {
+                            setQueue(prev => prev.filter((_, i) => i !== idx))
+                          }}
+                          disabled={saving}
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="flex items-center justify-center h-32 text-center text-sm text-muted-foreground">
+                <div>
+                  <UploadCloud className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                  <p>No files queued yet</p>
+                  <p className="text-xs">Drop files above to get started</p>
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div className="flex items-center justify-between pt-4 flex-shrink-0 border-t">
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
               <Wand2 className="h-3.5 w-3.5" />
               {"Auto-tagging by file type and extension"}
@@ -286,7 +319,7 @@ export default function UploadModal({ open = false, onOpenChange, currentStorage
                 <X className="mr-2 h-4 w-4" />
                 {"Cancel"}
               </Button>
-              <Button className="rounded-full" disabled={!queue.length || saving} onClick={beginSave}>
+              <Button className="rounded-full" disabled={!queue.length || saving || wouldExceedLimit} onClick={beginSave}>
                 {saving ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />

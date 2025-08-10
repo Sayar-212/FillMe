@@ -163,7 +163,7 @@ export default function DashboardPage() {
                 {filtered.length} {"files"}
               </Badge>
               <span className="text-xs text-muted-foreground">
-                {isLoading ? "Loading your library..." : `${(totalStorage / 1024 / 1024).toFixed(1)}MB / 100MB used`}
+                {isLoading ? "Loading your library..." : totalStorage > 0 ? `${(totalStorage / 1024 / 1024).toFixed(1)}MB / 100MB used` : "Stored in Supabase"}
               </span>
             </div>
           </div>
