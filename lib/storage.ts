@@ -19,6 +19,12 @@ const BUCKET_NAME = 'files'
 
 export class SupabaseStorage {
   static async uploadFile(file: File, userId: string, tags: string[] = []): Promise<StoredFile> {
+    // Check file size - be honest about our poverty 😅
+    const maxSize = 50 * 1024 * 1024 // 50MB
+    if (file.size > maxSize) {
+      throw new Error(`🚀 Whoa there! That ${(file.size / 1024 / 1024).toFixed(1)}MB file is HUGE! Unfortunately, I'm currently too poor to handle files over 50MB. Once I get rich, we'll make storage limits INFINITE! 💰✨ (For now, try splitting it up or compressing it)`)
+    }
+
     const fileExt = file.name.split('.').pop()
     const fileName = `${Date.now()}-${file.name}`
     const filePath = `${userId}/${fileName}`
@@ -27,7 +33,13 @@ export class SupabaseStorage {
       .from(BUCKET_NAME)
       .upload(filePath, file)
 
-    if (uploadError) throw uploadError
+    if (uploadError) {
+      // Handle storage quota exceeded
+      if (uploadError.message?.includes('exceeded') || uploadError.message?.includes('quota')) {
+        throw new Error(`💸 Oops! My storage piggy bank is empty! I've hit my free tier limits because I'm broke AF. Soon I'll upgrade and we'll have UNLIMITED space! 🐷💰`)
+      }
+      throw uploadError
+    }
 
     const { data: urlData } = supabase.storage
       .from(BUCKET_NAME)

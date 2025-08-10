@@ -100,18 +100,25 @@ export default function UploadModal({ open = false, onOpenChange }: Props = { op
     if (!queue.length || !user) return
     setSaving(true)
     setDoneCount(0)
-    // Save sequentially to keep UI simple
-    for (const { file, path } of queue) {
-      const ext = (file.name.split(".").pop() || "").toLowerCase()
-      const kind = inferKind(file.type, file.name)
-      const fileName = path || file.name
-      const fileWithPath = new File([file], fileName, { type: file.type })
-      await db.files.add(fileWithPath, user.id, autoTags(kind, ext))
-      setDoneCount((c) => c + 1)
+    
+    try {
+      // Save sequentially to keep UI simple
+      for (const { file, path } of queue) {
+        const ext = (file.name.split(".").pop() || "").toLowerCase()
+        const kind = inferKind(file.type, file.name)
+        const fileName = path || file.name
+        const fileWithPath = new File([file], fileName, { type: file.type })
+        await db.files.add(fileWithPath, user.id, autoTags(kind, ext))
+        setDoneCount((c) => c + 1)
+      }
+      setSaving(false)
+      setQueue([])
+      onOpenChange?.(false)
+    } catch (error: any) {
+      setSaving(false)
+      // Show the funny error message
+      alert(error.message || "Upload failed! Something went wrong.")
     }
-    setSaving(false)
-    setQueue([])
-    onOpenChange?.(false)
   }, [queue, onOpenChange, user])
 
   return (
