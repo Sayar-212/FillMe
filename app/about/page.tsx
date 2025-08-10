@@ -1,6 +1,6 @@
 "use client"
 
-import { ArrowLeft, ExternalLink, Link, Mail } from "lucide-react"
+import { ArrowLeft, ExternalLink, Mail, Linkedin } from "lucide-react"
 import { Button } from "../../components/ui/button"
 import GradientBG from "../../components/gradient-bg"
 
@@ -65,14 +65,14 @@ export default function AboutPage() {
                 <div className="bg-primary/5 rounded-lg p-6 border border-primary/20">
                   <h3 className="font-semibold text-foreground mb-3">The Vision</h3>
                   <p className="text-sm">
-                    FillMe was born from the simple belief that developers and creators should have unlimited, 
-                    private storage that's as easy to use as drag-and-drop, as organized as a well-structured database, 
+                    FillMe was born from the simple belief that developers and creators should have 
+                    private storage with no upper file limits that's as easy to use as drag-and-drop, as organized as a well-structured database, 
                     and as secure as your most sensitive projects deserve.
                   </p>
                 </div>
 
                 <p>
-                  This isn't just another cloud storage app - it's a developer's sanctuary where file size limits don't exist, 
+                  This isn't just another cloud storage app - it's a developer's sanctuary where no upper file size limits exist, 
                   privacy is guaranteed, and finding that one file from six months ago takes seconds, not hours.
                 </p>
               </div>
@@ -83,7 +83,7 @@ export default function AboutPage() {
               <div className="space-y-3">
                 <h3 className="font-semibold">What Makes FillMe Different</h3>
                 <ul className="space-y-2 text-sm text-muted-foreground">
-                  <li>✓ No file size limits (within reason)</li>
+                  <li>✓ No upper file size limits</li>
                   <li>✓ Complete privacy - your files stay yours</li>
                   <li>✓ Smart tagging and search</li>
                   <li>✓ Support for any file type</li>
@@ -104,11 +104,17 @@ export default function AboutPage() {
             {/* Contact */}
             <div className="text-center space-y-4 pt-8 border-t border-muted/20">
               <h3 className="font-semibold">Let's Connect</h3>
-              <div className="flex justify-center gap-4">
+              <div className="flex justify-center gap-3 flex-wrap">
                 <Button variant="outline" size="sm" asChild>
                   <a href="mailto:sayar.basu.cse26@heritageit.edu.in">
                     <Mail className="mr-2 h-4 w-4" />
                     Email
+                  </a>
+                </Button>
+                <Button variant="outline" size="sm" asChild>
+                  <a href="https://www.linkedin.com/in/sayar-basu-21027b261/" target="_blank" rel="noopener noreferrer">
+                    <Linkedin className="mr-2 h-4 w-4" />
+                    LinkedIn
                   </a>
                 </Button>
                 <Button variant="outline" size="sm" asChild>
@@ -117,12 +123,7 @@ export default function AboutPage() {
                     Portfolio
                   </a>
                 </Button>
-                <Button variant="outline" size="sm" asChild>
-                  <a href="https://linktr.ee/sayarbasu" target="_blank" rel="noopener noreferrer">
-                    <Link className="mr-2 h-4 w-4" />
-                    Linktree
-                  </a>
-                </Button>
+
               </div>
               <p className="text-xs text-muted-foreground">
                 Have feedback or suggestions? I'd love to hear from you!

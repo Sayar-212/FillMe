@@ -30,13 +30,13 @@ export default function Page() {
             />
           </div>
           <span className="inline-block rounded-full border px-3 py-1 text-xs text-muted-foreground">
-            FillMe — Minimal, Infinite Storage for Code & Beyond
+            FillMe — Structured, Easy & Private Storage for Code & Beyond
           </span>
           <h1 className="text-balance bg-gradient-to-b from-foreground to-foreground/70 bg-clip-text text-4xl font-semibold leading-tight text-transparent md:text-6xl">
-            {"Store Everything. Structured. Forever."}
+            {"Store Everything. Structured. Private."}
           </h1>
           <p className="mx-auto max-w-xl text-pretty text-sm text-muted-foreground md:text-base">
-            {"Drop it. Tag it. Find it. Forever."}
+            {"Drop it. Tag it. Find it. No file size limits."}
           </p>
           <div className="pt-4">
             <Button
