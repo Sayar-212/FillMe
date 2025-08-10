@@ -147,21 +147,21 @@ export default function UploadModal({ open = false, onOpenChange, currentStorage
             onDragLeave={() => setDragOver(false)}
             onDrop={handleDrop}
             className={cn(
-              "border-2 border-dashed rounded-lg p-8 text-center transition-colors",
+              "border-2 border-dashed rounded-lg p-12 text-center transition-colors",
               dragOver ? "border-primary bg-primary/5" : "border-muted-foreground/25",
             )}
           >
-            <UploadCloud className={cn("h-12 w-12 mx-auto mb-4", dragOver ? "text-primary" : "text-muted-foreground")} />
-            <p className="text-sm font-medium mb-2">Drop files or folders here</p>
-            <p className="text-xs text-muted-foreground mb-4">Support for all file types</p>
+            <UploadCloud className={cn("h-16 w-16 mx-auto mb-6", dragOver ? "text-primary" : "text-muted-foreground")} />
+            <p className="text-base font-medium mb-3">Drop files or folders here</p>
+            <p className="text-sm text-muted-foreground mb-6">Support for all file types</p>
             
             <div className="flex justify-center gap-3">
-              <Button variant="secondary" onClick={() => inputRef.current?.click()}>
-                <FileUp className="mr-2 h-4 w-4" />
+              <Button variant="secondary" size="lg" onClick={() => inputRef.current?.click()}>
+                <FileUp className="mr-2 h-5 w-5" />
                 Choose Files
               </Button>
-              <Button variant="outline" onClick={() => folderInputRef.current?.click()}>
-                <FolderOpen className="mr-2 h-4 w-4" />
+              <Button variant="outline" size="lg" onClick={() => folderInputRef.current?.click()}>
+                <FolderOpen className="mr-2 h-5 w-5" />
                 Choose Folder
               </Button>
             </div>
