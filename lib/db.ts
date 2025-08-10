@@ -42,7 +42,11 @@ export function useLiveFiles() {
     }
   }, [user])
 
-  return useMemo(() => ({ files, isLoading }), [files, isLoading])
+  const totalStorage = useMemo(() => {
+    return files.reduce((total, file) => total + (file.size || 0), 0)
+  }, [files])
+
+  return useMemo(() => ({ files, isLoading, totalStorage }), [files, isLoading, totalStorage])
 }
 
 export const db = {
