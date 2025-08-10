@@ -132,7 +132,7 @@ export default function UploadModal({ open = false, onOpenChange, currentStorage
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto p-6">
+      <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto p-6">
         <div className="space-y-6">
           <div>
             <h2 className="text-lg font-semibold">Upload Files</h2>
