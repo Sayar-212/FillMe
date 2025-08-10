@@ -57,6 +57,14 @@ export default function Page() {
             <p className="mt-3 text-xs text-muted-foreground">
               {"Limited Storage cuz i m Poor"}
             </p>
+            <div className="mt-6 pt-4 border-t border-muted/20">
+              <a 
+                href="/about" 
+                className="text-xs text-muted-foreground hover:text-foreground transition-colors underline underline-offset-4"
+              >
+                Meet the Creator →
+              </a>
+            </div>
           </div>
         </div>
       </main>
