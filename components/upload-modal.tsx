@@ -216,10 +216,10 @@ export default function UploadModal({ open = false, onOpenChange, currentStorage
           {queue.length > 0 && (
             <div className="flex items-center justify-between text-sm">
               <span className="text-muted-foreground">
-                {queue.length} file{queue.length !== 1 ? 's' : ''} • {(queueSize / 1024 / 1024).toFixed(1)}MB
+                {queue.length} file{queue.length !== 1 ? 's' : ''} • {formatFileSize(queueSize)}
               </span>
               <span className={wouldExceedLimit ? "text-red-500 font-medium" : "text-muted-foreground"}>
-                {((currentStorage + queueSize) / 1024 / 1024).toFixed(1)} / 100MB
+                {((currentStorage + queueSize) / 1024 / 1024).toFixed(2)} / 100.00MB
               </span>
             </div>
           )}
@@ -232,7 +232,7 @@ export default function UploadModal({ open = false, onOpenChange, currentStorage
                   <div className="flex-1 min-w-0">
                     <div className="text-sm font-medium truncate">{file.name}</div>
                     <div className="text-xs text-muted-foreground">
-                      {(file.size / 1024 / 1024).toFixed(1)}MB
+                      {formatFileSize(file.size)}
                     </div>
                   </div>
                   
@@ -268,35 +268,38 @@ export default function UploadModal({ open = false, onOpenChange, currentStorage
             </div>
           )}
 
-          <div className="flex items-center justify-between pt-4 border-t">
-            <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              <Wand2 className="h-3.5 w-3.5" />
-              {"Auto-tagging by file type and extension"}
-            </div>
-            <div className="flex gap-2">
-              <Button variant="ghost" className="rounded-full" onClick={() => onOpenChange?.(false)}>
-                <X className="mr-2 h-4 w-4" />
-                {"Cancel"}
-              </Button>
-              <Button className="rounded-full" disabled={!queue.length || saving || wouldExceedLimit} onClick={beginSave}>
-                {saving ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    {"Uploading..."}
-                  </>
-                ) : (
-                  <>
-                    <UploadCloud className="mr-2 h-4 w-4" />
-                    {"Upload"}
-                  </>
-                )}
-              </Button>
-            </div>
+          <div className="flex justify-end gap-3 pt-4 border-t">
+            <Button variant="outline" onClick={() => onOpenChange?.(false)}>
+              Cancel
+            </Button>
+            <Button disabled={!queue.length || saving || wouldExceedLimit} onClick={beginSave}>
+              {saving ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Uploading...
+                </>
+              ) : (
+                <>
+                  <UploadCloud className="mr-2 h-4 w-4" />
+                  Upload {queue.length > 0 && `(${queue.length})`}
+                </>
+              )}
+            </Button>
           </div>
         </div>
       </DialogContent>
     </Dialog>
   )
+}
+
+function formatFileSize(bytes: number): string {
+  if (bytes < 1024) {
+    return `${bytes} bytes`
+  } else if (bytes < 1024 * 1024) {
+    return `${(bytes / 1024).toFixed(1)}KB`
+  } else {
+    return `${(bytes / 1024 / 1024).toFixed(1)}MB`
+  }
 }
 
 function autoTags(kind: string, ext: string) {
