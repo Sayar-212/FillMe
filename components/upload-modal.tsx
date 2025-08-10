@@ -14,6 +14,8 @@ import { useAuth } from "./auth"
 type Props = {
   open?: boolean
   onOpenChange?: (open: boolean) => void
+  currentStorage?: number
+  maxStorage?: number
 }
 
 type Incoming = {
@@ -21,13 +23,20 @@ type Incoming = {
   path?: string
 }
 
-export default function UploadModal({ open = false, onOpenChange }: Props = { open: false, onOpenChange: () => {} }) {
+export default function UploadModal({ open = false, onOpenChange, currentStorage = 0, maxStorage = 100 * 1024 * 1024 }: Props = { open: false, onOpenChange: () => {} }) {
   const inputRef = useRef<HTMLInputElement | null>(null)
   const folderInputRef = useRef<HTMLInputElement | null>(null)
   const [dragOver, setDragOver] = useState(false)
   const [queue, setQueue] = useState<Incoming[]>([])
   const [saving, setSaving] = useState(false)
   const [doneCount, setDoneCount] = useState(0)
+  
+  // Calculate queue size
+  const queueSize = useMemo(() => {
+    return queue.reduce((total, { file }) => total + file.size, 0)
+  }, [queue])
+  
+  const wouldExceedLimit = currentStorage + queueSize > maxStorage
 
   useEffect(() => {
     if (!open) {
@@ -239,6 +248,33 @@ export default function UploadModal({ open = false, onOpenChange }: Props = { op
               </div>
             )}
           </div>
+
+          {/* Local Storage Bar */}
+          {queue.length > 0 && (
+            <div className="border-t pt-3 space-y-2">
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-muted-foreground">
+                  Queue: {(queueSize / 1024 / 1024).toFixed(1)}MB
+                </span>
+                <span className={wouldExceedLimit ? "text-red-500 font-medium" : "text-muted-foreground"}>
+                  Total: {((currentStorage + queueSize) / 1024 / 1024).toFixed(1)}MB / 100MB
+                </span>
+              </div>
+              <div className="h-2 bg-muted rounded-full overflow-hidden">
+                <div 
+                  className={`h-full transition-all ${
+                    wouldExceedLimit ? 'bg-red-500' : 'bg-primary'
+                  }`}
+                  style={{ width: `${Math.min(((currentStorage + queueSize) / maxStorage) * 100, 100)}%` }}
+                />
+              </div>
+              {wouldExceedLimit && (
+                <p className="text-xs text-red-500">
+                  ⚠️ This upload would exceed your 100MB limit!
+                </p>
+              )}
+            </div>
+          )}
 
           <div className="flex items-center justify-between pt-1 flex-shrink-0">
             <div className="flex items-center gap-2 text-xs text-muted-foreground">

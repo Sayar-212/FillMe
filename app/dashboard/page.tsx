@@ -35,7 +35,10 @@ export default function DashboardPage() {
     }
   }, [loadingUser, user, router])
 
-  const { files, isLoading } = useLiveFiles()
+  const { files, isLoading, totalStorage } = useLiveFiles()
+  
+  const maxStorage = 100 * 1024 * 1024 // 100MB
+  const isOverLimit = totalStorage > maxStorage
 
   const extractKeywords = (text: string): string[] => {
     const stopWords = ['i', 'have', 'an', 'exam', 'tomorrow', 'on', 'the', 'a', 'for', 'me', 'all', 'files', 'retrieve', 'get', 'find', 'show']
@@ -134,13 +137,33 @@ export default function DashboardPage() {
             </div>
           </div>
 
+          {/* Storage Warning */}
+          {isOverLimit && (
+            <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-4 dark:border-red-800 dark:bg-red-950/20">
+              <div className="flex items-start gap-3">
+                <div className="text-red-500">
+                  ⚠️
+                </div>
+                <div className="flex-1">
+                  <h3 className="font-semibold text-red-800 dark:text-red-200">
+                    Storage Limit Exceeded!
+                  </h3>
+                  <p className="mt-1 text-sm text-red-700 dark:text-red-300">
+                    You're using {(totalStorage / 1024 / 1024).toFixed(1)}MB out of 100MB. 
+                    Since it's the start and we're on free tiers, please delete heavy files or some files may be lost! 💸
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
           <div className="mb-3 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Badge variant="secondary" className="rounded-full">
                 {filtered.length} {"files"}
               </Badge>
               <span className="text-xs text-muted-foreground">
-                {isLoading ? "Loading your library..." : "Stored in Supabase"}
+                {isLoading ? "Loading your library..." : `${(totalStorage / 1024 / 1024).toFixed(1)}MB / 100MB used`}
               </span>
             </div>
           </div>
@@ -165,7 +188,12 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        <UploadModal open={open} onOpenChange={setOpen} />
+        <UploadModal 
+          open={open} 
+          onOpenChange={setOpen} 
+          currentStorage={totalStorage}
+          maxStorage={maxStorage}
+        />
       </div>
     </div>
   )
