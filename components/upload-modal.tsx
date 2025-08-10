@@ -123,6 +123,8 @@ export default function UploadModal({ open = false, onOpenChange, currentStorage
       setSaving(false)
       setQueue([])
       onOpenChange?.(false)
+      // Force refresh of files list
+      window.location.reload()
     } catch (error: any) {
       setSaving(false)
       // Show the funny error message

@@ -35,7 +35,7 @@ export function useLiveFiles() {
     }
     run()
 
-    const t = setInterval(run, 5000)
+    const t = setInterval(run, 2000) // More frequent updates
     return () => {
       cancelled = true
       clearInterval(t)
