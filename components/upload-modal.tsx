@@ -132,135 +132,143 @@ export default function UploadModal({ open = false, onOpenChange, currentStorage
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[85vh] p-6">
-        <div className="space-y-6">
-          <div>
-            <h2 className="text-lg font-semibold">Upload Files</h2>
-            <p className="text-sm text-muted-foreground">Drag & drop files or folders, or pick from your device.</p>
-          </div>
-
-          <div
-            onDragOver={(e) => {
-              e.preventDefault()
-              setDragOver(true)
-            }}
-            onDragLeave={() => setDragOver(false)}
-            onDrop={handleDrop}
-            className={cn(
-              "border-2 border-dashed rounded-lg p-8 text-center transition-colors",
-              dragOver ? "border-primary bg-primary/5" : "border-muted-foreground/25",
-            )}
-          >
-            <UploadCloud className={cn("h-12 w-12 mx-auto mb-4", dragOver ? "text-primary" : "text-muted-foreground")} />
-            <p className="text-sm font-medium mb-2">Drop files or folders here</p>
-            <p className="text-xs text-muted-foreground mb-4">Support for all file types</p>
-            
-            <div className="flex justify-center gap-3">
-              <Button variant="secondary" onClick={() => inputRef.current?.click()}>
-                <FileUp className="mr-2 h-4 w-4" />
-                Choose Files
-              </Button>
-              <Button variant="outline" onClick={() => folderInputRef.current?.click()}>
-                <FolderOpen className="mr-2 h-4 w-4" />
-                Choose Folder
-              </Button>
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-hidden flex flex-col p-0">
+        <div className="flex flex-col h-full">
+          <div className="p-6 pb-4">
+            <div>
+              <h2 className="text-lg font-semibold">Upload Files</h2>
+              <p className="text-sm text-muted-foreground">Drag & drop files or folders, or pick from your device.</p>
             </div>
-            
-            <input
-              ref={inputRef}
-              type="file"
-              multiple
-              className="hidden"
-              onChange={(e) => {
-                const files = Array.from(e.target.files ?? []).map((f) => ({
-                  file: f,
-                  path: f.name,
-                }))
-                onFiles(files)
-                e.currentTarget.value = ""
-              }}
-            />
-            <input
-              ref={folderInputRef}
-              type="file"
-              multiple
-              webkitdirectory="true"
-              className="hidden"
-              onChange={(e) => {
-                const files = Array.from(e.target.files ?? []).map((f) => ({
-                  file: f,
-                  path: (f as any).webkitRelativePath || f.name,
-                }))
-                onFiles(files)
-                e.currentTarget.value = ""
-              }}
-            />
           </div>
 
-          {queue.length > 0 && (
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium">
-                  {queue.length} file{queue.length !== 1 ? 's' : ''} ready
-                </span>
-                <span className={wouldExceedLimit ? "text-red-500 text-sm font-medium" : "text-sm text-muted-foreground"}>
-                  {((currentStorage + queueSize) / 1024 / 1024).toFixed(2)} / 100MB
-                </span>
+          <div className="px-6">
+            <div
+              onDragOver={(e) => {
+                e.preventDefault()
+                setDragOver(true)
+              }}
+              onDragLeave={() => setDragOver(false)}
+              onDrop={handleDrop}
+              className={cn(
+                "border-2 border-dashed rounded-lg p-6 text-center transition-colors",
+                dragOver ? "border-primary bg-primary/5" : "border-muted-foreground/25",
+              )}
+            >
+              <UploadCloud className={cn("h-10 w-10 mx-auto mb-3", dragOver ? "text-primary" : "text-muted-foreground")} />
+              <p className="text-sm font-medium mb-1">Drop files or folders here</p>
+              <p className="text-xs text-muted-foreground mb-4">Support for all file types</p>
+              
+              <div className="flex justify-center gap-3">
+                <Button variant="secondary" size="sm" onClick={() => inputRef.current?.click()}>
+                  <FileUp className="mr-2 h-4 w-4" />
+                  Choose Files
+                </Button>
+                <Button variant="outline" size="sm" onClick={() => folderInputRef.current?.click()}>
+                  <FolderOpen className="mr-2 h-4 w-4" />
+                  Choose Folder
+                </Button>
               </div>
               
-              <div className="max-h-48 overflow-y-auto border rounded-lg">
-                {queue.map(({ file, path }, idx) => (
-                  <div key={`${file.name}-${idx}`} className="flex items-center justify-between p-3 border-b last:border-b-0">
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium truncate">{file.name}</p>
-                      <p className="text-xs text-muted-foreground">{formatFileSize(file.size)}</p>
-                    </div>
-                    
-                    {saving && idx < doneCount ? (
-                      <CheckCircle2 className="h-4 w-4 text-green-500" />
-                    ) : saving && idx === doneCount ? (
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                    ) : (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-8 w-8 p-0"
-                        onClick={() => setQueue(prev => prev.filter((_, i) => i !== idx))}
-                      >
-                        <X className="h-4 w-4" />
-                      </Button>
-                    )}
-                  </div>
-                ))}
-              </div>
-              
-              {wouldExceedLimit && (
-                <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-                  <p className="text-sm text-red-700">
-                    ⚠️ Would exceed 100MB limit. Remove some files to continue.
-                  </p>
+              <input
+                ref={inputRef}
+                type="file"
+                multiple
+                className="hidden"
+                onChange={(e) => {
+                  const files = Array.from(e.target.files ?? []).map((f) => ({
+                    file: f,
+                    path: f.name,
+                  }))
+                  onFiles(files)
+                  e.currentTarget.value = ""
+                }}
+              />
+              <input
+                ref={folderInputRef}
+                type="file"
+                multiple
+                webkitdirectory="true"
+                className="hidden"
+                onChange={(e) => {
+                  const files = Array.from(e.target.files ?? []).map((f) => ({
+                    file: f,
+                    path: (f as any).webkitRelativePath || f.name,
+                  }))
+                  onFiles(files)
+                  e.currentTarget.value = ""
+                }}
+              />
+            </div>
+          </div>
+
+          <div className="flex-1 overflow-hidden px-6">
+            {queue.length > 0 && (
+              <div className="h-full flex flex-col">
+                <div className="flex items-center justify-between py-3">
+                  <span className="text-sm font-medium">
+                    {queue.length} file{queue.length !== 1 ? 's' : ''} ready
+                  </span>
+                  <span className={wouldExceedLimit ? "text-red-500 text-sm font-medium" : "text-sm text-muted-foreground"}>
+                    {((currentStorage + queueSize) / 1024 / 1024).toFixed(2)} / 100MB
+                  </span>
                 </div>
-              )}
-            </div>
-          )}
+                
+                <div className="flex-1 overflow-y-auto border rounded-lg">
+                  {queue.map(({ file, path }, idx) => (
+                    <div key={`${file.name}-${idx}`} className="flex items-center justify-between p-3 border-b last:border-b-0">
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium truncate">{file.name}</p>
+                        <p className="text-xs text-muted-foreground">{formatFileSize(file.size)}</p>
+                      </div>
+                      
+                      {saving && idx < doneCount ? (
+                        <CheckCircle2 className="h-4 w-4 text-green-500" />
+                      ) : saving && idx === doneCount ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 w-8 p-0"
+                          onClick={() => setQueue(prev => prev.filter((_, i) => i !== idx))}
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+                
+                {wouldExceedLimit && (
+                  <div className="bg-red-50 border border-red-200 rounded-lg p-3 mt-3">
+                    <p className="text-sm text-red-700">
+                      ⚠️ Would exceed 100MB limit. Remove some files to continue.
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
 
-          <div className="flex justify-end gap-3 pt-4 border-t">
-            <Button variant="outline" onClick={() => onOpenChange?.(false)}>
-              Cancel
-            </Button>
-            <Button disabled={!queue.length || saving || wouldExceedLimit} onClick={beginSave}>
-              {saving ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Uploading...
-                </>
-              ) : (
-                <>
-                  <UploadCloud className="mr-2 h-4 w-4" />
-                  Upload {queue.length > 0 && `(${queue.length})`}
-                </>
-              )}
-            </Button>
+          <div className="border-t p-6 pt-4">
+            <div className="flex justify-end gap-3">
+              <Button variant="outline" onClick={() => onOpenChange?.(false)}>
+                Cancel
+              </Button>
+              <Button disabled={!queue.length || saving || wouldExceedLimit} onClick={beginSave}>
+                {saving ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Uploading...
+                  </>
+                ) : (
+                  <>
+                    <UploadCloud className="mr-2 h-4 w-4" />
+                    Upload {queue.length > 0 && `(${queue.length})`}
+                  </>
+                )}
+              </Button>
+            </div>
           </div>
         </div>
       </DialogContent>
